@@ -12,9 +12,10 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title></title>
         <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="bootstrap/css/datetimepicker.css" rel="stylesheet" media="screen">
         <script type="text/javascript" src="bootstrap/js/jquery.js"></script>
         <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-
+        <script type="text/javascript" src="bootstrap/js/bootstrap-datetimepicker.min.js"></script>
         <style type="text/css">
             body {
                 padding-top: 60px;
@@ -69,14 +70,14 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                         <form name="register" action="do_register.php" method=post>
                             <div class="row">
                                 <div class="span3 offset1">
-                                    <p>Departure Station <input type=text name="username"></p>
+                                    <p>Departure Station <input type=text name="Departure_Station"></p>
                                 </div><!--/span-->
                                 <div class="span3">
-                                    <p>Arrival Station <input type=text name="password"></p>
+                                    <p>Arrival Station <input type=text name="Arrival_Station"></p>
                                 </div><!--/span-->    
 
                                 <div class="span3">
-                                    <p>Departure Time <input type=text name="password"></p>
+                                    <p>Departure Time <input id="datepicker" data-date-format="yyyy-mm-dd hh:ii" type=text name="Departure_Time"></p>
                                 </div><!--/span-->  
                             </div>
                             <div>
@@ -86,16 +87,44 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                             </div>
                         </form>
                     </div>
+                    <table class="table">
+                        <thead id="search_head">
+                        </thead>
+                        <tbody id="search_result">
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
 
     </body>
     <script type="text/javascript">
-        $('#search').on('click',function(){
-            alert(222);
+        $('#search').click(function(){
+            ds=$('[name=Departure_Station]').val();
+            as=$('[name=Arrival_Station]').val();
+            time=$('[name=Departure_Time]').val();
+            $.post("search.php",{from:ds,to:as,time:time},
+            function(data){
+                if(data){
+                    $('#search_head')[0].innerHTML="<tr><th>#</th><th>Departure</th><th>Arrival</th><th>Duration</th><th>Operation</th></tr>";
+                    $('#search_result')[0].innerHTML=data;
+                }
+            })
         })
-
+        $('#datepicker').datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true
+        });
+        $(document.body).delegate('[name=book]','click',function(e){
+            alert(e.target.getAttribute('other'));
+            other=e.target.getAttribute('other');
+            user="<%=session.getAttribute('user')%>";
+            $.post("do_book.php",{other:other,user:user},
+            function(data){
+                alert(data);
+            })
+        }) 
     </script>    
 </html>
 
