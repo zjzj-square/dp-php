@@ -1,4 +1,10 @@
 <?php
+session_start();
+if ($_SESSION['login'] != true) {
+    header("Location:index.php");
+}
+$liftime = 5 * 60;
+setcookie(session_name(), session_id(), time() + $liftime, "/");
 
 include_once 'Base.php';
 $username = $_POST['username'];

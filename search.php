@@ -1,4 +1,10 @@
 <?php
+session_start();
+if ($_SESSION['login'] != true) {
+    header("Location:index.php");
+}
+$liftime = 5 * 60;
+setcookie(session_name(), session_id(), time() + $liftime, "/");
 
 include_once 'Base.php';
 $from = $_POST['from'];
@@ -20,6 +26,6 @@ while ($data = mysql_fetch_array($result))
         echo '<td>' . $data['Departure'] . '('.$data['DepartureTime'].')</td>';
         echo '<td>' . $data['Arrival'] .  '('.date("H:i",$ArrivalTime).')</td>';
         echo '<td>' . $data['Duration'] . '</td>';
-        echo '<td><button class="btn btn-info" name="book" id="book'.$data['id'].'" other="'.$data['Departure'].'&'.$data['DepartureTime'].'&'.$data['Arrival'].'&'.date("H:i",$ArrivalTime).'&'.$data['Duration'].'">book</button></td>';
+        echo '<td><button class="btn btn-info" name="book" id="book'.$data['id'].'" other="'.$data['Departure'].'&'.$data['DepartureTime'].'&'.$data['Arrival'].'&'.date("H:i",$ArrivalTime).'&'.$data['Duration'].'">book</button></td></tr>';
     }
 ?>

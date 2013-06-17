@@ -47,7 +47,7 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                     <a class="brand" href="#">Enjoy your trip</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
-                            Logged in as <a href="#" class="navbar-link"><?php echo " <b>" . $_SESSION['user'] . "</b>"; ?></a>
+                            <a href="logout.php" class="navbar-link"><?php echo " Logout <b>" . $_SESSION['user'] . "</b>"; ?></a>
                         </p>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -117,12 +117,17 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
             autoclose: true
         });
         $(document.body).delegate('[name=book]','click',function(e){
-            alert(e.target.getAttribute('other'));
+            //alert(e.target.getAttribute('other'));
             other=e.target.getAttribute('other');
-            user="<%=session.getAttribute('user')%>";
-            $.post("do_book.php",{other:other,user:user},
+            user="<?php echo $_SESSION['user'];?>";
+            date=$('#datepicker').val();
+            $.post("do_book.php",{other:other,user:user,date:date},
             function(data){
-                alert(data);
+                if(data=='true'){
+                    alert("Sucessful.");
+                }else{
+                    alert("Time conflicts , please choose another train.");
+                }
             })
         }) 
     </script>    
