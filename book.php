@@ -61,6 +61,10 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                             <li class="nav-header">functions</li>
                             <li class="active"><a href="book.php">book a trip</a></li>
                             <li><a href="mytrips.php">show my trips</a></li>
+                            <?php if($_SESSION['user']=='admin'){ ?>
+                            <li><a href="admin_fun1.php">display a user's trip</a></li>
+                            <li><a href="admin_fun2.php">display all trains</a></li>
+                            <?php }?>
                         </ul>
                     </div><!--/.well -->
                 </div>
@@ -119,9 +123,10 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
         $(document.body).delegate('[name=book]','click',function(e){
             //alert(e.target.getAttribute('other'));
             other=e.target.getAttribute('other');
+            id=e.target.getAttribute('id');
             user="<?php echo $_SESSION['user'];?>";
             date=$('#datepicker').val();
-            $.post("do_book.php",{other:other,user:user,date:date},
+            $.post("do_book.php",{other:other,user:user,date:date,id:id},
             function(data){
                 if(data=='true'){
                     alert("Sucessful.");
@@ -130,6 +135,18 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                 }
             })
         }) 
-    </script>    
+        $(function(){
+            msg="<?php echo $_SESSION['msg'];?>";
+            if(msg){
+                alert(msg);
+                user="<?php echo $_SESSION['user'];?>";
+                $.post("clear_msg.php",{user:user},function(data){
+                    if(data){
+                        alert(data);
+                    }
+                })
+            }
+        })
+    </script> 
 </html>
 

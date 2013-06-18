@@ -8,6 +8,7 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
 
 $user = $_POST['user'];
 $other = $_POST['other'];
+$id = substr($_POST['id'],4);
 $date = date("Y-m-d", strtotime($_POST['date']));
 $info = explode("&", $other);
 
@@ -31,7 +32,7 @@ while ($data = mysql_fetch_array($result)) {
         return;
     }
 }
-$sql = "INSERT INTO `BookRecord` VALUES (null,'$user','$from','$to','$departureTime','$arrivalTime','$duration')";
+$sql = "INSERT INTO `BookRecord` VALUES (null,'$user','$from','$to','$departureTime','$arrivalTime','$duration','$id')";
 mysql_query($sql);
 echo "true";
 return;

@@ -14,6 +14,7 @@ Base::DB_Connect();
 if ($op == "show") {
     $sql = "select * from BookRecord where username='" . $user . "' ORDER BY `DepartureTime`";
     $result = mysql_query($sql);
+    echo " ";
     $i = 1;
     while ($data = mysql_fetch_array($result)) {
         if ($i % 2) {

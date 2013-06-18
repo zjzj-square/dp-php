@@ -14,6 +14,7 @@ if ($data != FALSE) {
     setcookie(session_name(), session_id(), time() + $liftime, "/");
     $_SESSION['login'] = true;
     $_SESSION['user'] = $login_username;
+    $_SESSION['msg'] = $data['msg'];
     header("Location:index.php");
     exit;
 } else {

@@ -14,7 +14,7 @@ $time = $_POST['time'];
 Base::DB_Connect();
 $sql = "select * from Trains where Departure='" . mysql_real_escape_string($from) . "' and Arrival='" . mysql_real_escape_string($to) . "'";
 $result = mysql_query($sql);
-while ($data = mysql_fetch_array($result))
+while ($data = mysql_fetch_array($result)){
     if (strtotime($data['DepartureTime']) >= strtotime($time)) {       
         if ($data['id'] % 2) {
             echo '<tr class="info">';
@@ -28,4 +28,5 @@ while ($data = mysql_fetch_array($result))
         echo '<td>' . $data['Duration'] . '</td>';
         echo '<td><button class="btn btn-info" name="book" id="book'.$data['id'].'" other="'.$data['Departure'].'&'.$data['DepartureTime'].'&'.$data['Arrival'].'&'.date("H:i",$ArrivalTime).'&'.$data['Duration'].'">book</button></td></tr>';
     }
+}
 ?>

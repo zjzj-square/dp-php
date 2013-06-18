@@ -7,7 +7,7 @@ if ($_SESSION['login'] == true) {
     header("Location:book.php");
 } else {
     ?>
-    <html>
+ <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
             <title></title>
@@ -20,6 +20,7 @@ if ($_SESSION['login'] == true) {
                 body {
                     padding-top: 60px;
                     padding-bottom: 40px;
+                    text-align: center;
                 }
                 .sidebar-nav {
                     padding: 9px 0;
@@ -43,6 +44,14 @@ if ($_SESSION['login'] == true) {
                 #btn_login_div {
                     width:100px
                 }
+                .form_box{
+                    margin:40px auto;
+                    width:100%;
+                }
+                .span1 {
+                    float: none;
+                    display: inline-block;
+                }
             </style>
         </head>
         <body>
@@ -63,11 +72,11 @@ if ($_SESSION['login'] == true) {
                     </div>
                 </div>
             </div>
-            <div class="span10">
+            <div class="span10 form_box">
                 <form name="login" action="login.php" method=post>
-                    <div class="row offset4"><span class="form_text">Username</span><input type=text name="username"></div>
-                    <div class="row offset4"><span class="form_text">Password</span><input type=password name="password"></div>
-                    <div class="row offset4">
+                    <div class="row "><span class="form_text">Username</span><input type=text name="username"></div>
+                    <div class="row "><span class="form_text">Password</span><input type=password name="password"></div>
+                    <div class="row ">
                         <div class="span1" id="btn_login_div">
                             <input class="btn btn-info" id="btn_login" name="login" type=submit value="Login"> 
                         </div>
@@ -78,7 +87,7 @@ if ($_SESSION['login'] == true) {
                 </form>
             </div>
         </body>
-    </html>   
+    </html> 
     <?php
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['login'] != true) {
+if ($_SESSION['login'] != true || $_SESSION['user']!='admin') {
     header("Location:index.php");
 }
 $liftime = 5 * 60;
@@ -60,30 +60,26 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                         <ul class="nav nav-list">
                             <li class="nav-header">functions</li>
                             <li><a href="book.php">book a trip</a></li>
-                            <li class="active"><a href="mytrips.php">show my trips</a></li>
-                            <?php if($_SESSION['user']=='admin'){ ?>
-                            <li><a href="admin_fun1.php">display a user's trip</a></li>
+                            <li><a href="mytrips.php">show my trips</a></li>
+                            <li class="active"><a href="admin_fun1.php">display a user's trip</a></li>
                             <li><a href="admin_fun2.php">display all trains</a></li>
-                            <?php }?>
                         </ul>
                     </div><!--/.well -->
                 </div>
                 <div class="span10">
+                    <div class="span3">
+                        <span>input the username</span>
+                        <input type="text" id="search_username"></input>
+                        <button class="btn btn-info" id="search_button">search</button>
+                    </div>
                     <table class="table">
                         <thead id="trip_head">
-                            <tr>
-                                <th>Departure</th>
-                                <th>Arrival</th>
-                                <th>Duration</th>
-                                <th>Operation</th>
-                            </tr>
+
                         </thead>
                         <tbody id="trip_body">
                         </tbody>
                     </table>
-                    <div class="span2 offset9">
-                        <p><button class="btn btn-info" id="validate" type="button" >Validate Journey</button></p>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -91,21 +87,22 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
 </html>
 
 <script>
-    $(function(){
-        user="<?php echo $_SESSION['user']; ?>";
+    $("#search_button").click(function(){
+        user=$("#search_username").val();
         op="show";
+        var nowuser=user;
         $.post("do_mytrip.php",{user:user,op:op},
         function(data){
-            if(data){                    
+            if(data){  
+                $("#trip_head")[0].innerHTML="<tr><th>Departure</th><th>Arrival</th><th>Duration</th><th>Operation</th></tr>";
                 $('#trip_body')[0].innerHTML=data;
             }
         })
     })
     $(document.body).delegate('[name=del]','click',function(e){
-        user="<?php echo $_SESSION['user']; ?>";
         op="del";
         id=e.target.getAttribute('id');
-        $.post("do_mytrip.php",{user:user,op:op,id:id},
+        $.post("do_mytrip.php",{user:nowuser,op:op,id:id},
         function(data){
             if(data=='1'){
                 alert("Deleted");
@@ -114,20 +111,5 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                 alert(data);
             }
         })
-    })
-    $("#validate").click(function(){    
-        arr=$('#trip_body')[0].children;
-        valid=1;
-        for(var i=0;i<arr.length-1;i++){
-            to=arr[i].children[1].innerHTML.split("(")[0];
-            from=arr[i+1].children[0].innerHTML.split("(")[0];
-            if(to!=from){
-                alert("There is some problem about your journey, please check it carefully.");
-                valid=0;
-            }
-        }
-        if(valid){
-            alert("The journey is ok , please enjoy it.");
-        }
     })
 </script>

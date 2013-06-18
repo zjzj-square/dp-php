@@ -33,6 +33,13 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                     padding-right: 5px;
                 }
             }
+            .form_text {
+                width: 70px;
+                display: inline-block;
+            }
+            .form_box{
+                width:100%;
+            }
         </style>
     </head>
     <body>
@@ -47,7 +54,7 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                     <a class="brand" href="#">Enjoy your trip</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
-                             <a href="logout.php" class="navbar-link"><?php echo " Logout <b>" . $_SESSION['user'] . "</b>"; ?></a>
+                            <a href="logout.php" class="navbar-link"><?php echo " Logout <b>" . $_SESSION['user'] . "</b>"; ?></a>
                         </p>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -60,74 +67,52 @@ setcookie(session_name(), session_id(), time() + $liftime, "/");
                         <ul class="nav nav-list">
                             <li class="nav-header">functions</li>
                             <li><a href="book.php">book a trip</a></li>
-                            <li class="active"><a href="mytrips.php">show my trips</a></li>
-                            <?php if($_SESSION['user']=='admin'){ ?>
+                            <li><a href="mytrips.php">show my trips</a></li>
                             <li><a href="admin_fun1.php">display a user's trip</a></li>
-                            <li><a href="admin_fun2.php">display all trains</a></li>
-                            <?php }?>
+                            <li class="active"><a href="admin_fun2.php">display all trains</a></li>
                         </ul>
                     </div><!--/.well -->
                 </div>
                 <div class="span10">
-                    <table class="table">
-                        <thead id="trip_head">
-                            <tr>
-                                <th>Departure</th>
-                                <th>Arrival</th>
-                                <th>Duration</th>
-                                <th>Operation</th>
-                            </tr>
-                        </thead>
-                        <tbody id="trip_body">
-                        </tbody>
-                    </table>
-                    <div class="span2 offset9">
-                        <p><button class="btn btn-info" id="validate" type="button" >Validate Journey</button></p>
+                    <div class="span5 form_box">
+                        <h1><span>Add A New Train</span></h1>
+                        <form name="addtrain" action="do_addtrain.php" method=post>
+                            <p>
+                                <span class="form_text">Departure</span> <input type=text name="departure" id="departure">
+                            </p>
+                            <p>
+                                <span class="form_text">Arrival</span> <input type=text name="arrival" id="arrival">
+                            </p>
+                            <p>
+                                <span class="form_text">Time</span> <input type=text name="departuretime" id="departuretime">                
+                            </p>
+                            <p>
+                                <span class="form_text">Duration</span> <input type=text name="duration" id="duration">
+                            </p>
+                            <p>    
+                                <input class="btn btn-info" name="addtrain" type="button" value="Add" id="add_train">
+                            </p>
+                        </form>
+
                     </div>
                 </div>
             </div>
-        </div>
     </body>
 </html>
 
 <script>
-    $(function(){
-        user="<?php echo $_SESSION['user']; ?>";
-        op="show";
-        $.post("do_mytrip.php",{user:user,op:op},
-        function(data){
-            if(data){                    
-                $('#trip_body')[0].innerHTML=data;
-            }
-        })
-    })
-    $(document.body).delegate('[name=del]','click',function(e){
-        user="<?php echo $_SESSION['user']; ?>";
-        op="del";
-        id=e.target.getAttribute('id');
-        $.post("do_mytrip.php",{user:user,op:op,id:id},
-        function(data){
-            if(data=='1'){
-                alert("Deleted");
-                window.location.reload();
-            }else{
-                alert(data);
-            }
-        })
-    })
-    $("#validate").click(function(){    
-        arr=$('#trip_body')[0].children;
-        valid=1;
-        for(var i=0;i<arr.length-1;i++){
-            to=arr[i].children[1].innerHTML.split("(")[0];
-            from=arr[i+1].children[0].innerHTML.split("(")[0];
-            if(to!=from){
-                alert("There is some problem about your journey, please check it carefully.");
-                valid=0;
-            }
+    $("#add_train").click(function(){
+        departure=$("#departure").val();
+        arrival=$("#arrival").val();
+        departuretime=$("#departuretime").val();
+        duration=$("#duration").val();
+        re = /^([01][0-9]|2[0-3])\:[0-5][0-9]$/;
+        if(!re.test(departuretime)){
+            alert('Departure Time Form illegal.');
         }
-        if(valid){
-            alert("The journey is ok , please enjoy it.");
+        if(!re.test(duration)){
+            alert('Duration Form illegal.');
         }
+        document.getElementsByName("addtrain")[0].submit();
     })
 </script>
